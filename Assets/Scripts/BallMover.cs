@@ -10,13 +10,18 @@ public class BallMover : MonoBehaviour
     // True if this is a hit on the unit circle, false if outside the unit circle
     public bool isHit;
 
+    private Estimator estimator;
+
     // The speed of the ball
     [SerializeField] private float speed = 0.1f;
+
+    private bool recorded;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        estimator = GameObject.FindObjectOfType<Estimator>();
     }
 
     // Update is called once per frame
@@ -25,6 +30,20 @@ public class BallMover : MonoBehaviour
         // If we've arrived, we're done
         if (transform.position.z >= 0)
         {
+            if (!recorded)
+            {
+                if (isHit)
+                {
+                    estimator.AddHit();
+		        }
+                else
+                {
+                    estimator.AddMiss();
+		        }
+
+                recorded = true;
+	        }
+
             return;
 	    }
 
